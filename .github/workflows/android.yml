@@ -8,11 +8,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
     - name: set up JDK 11
       uses: actions/setup-java@v4
       with:
@@ -22,5 +22,14 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    # 构建 APK（这里使用 assembleDebug 可以更明确，build 会包含测试等）
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew assembleDebug   # 或 assembleRelease 根据需要
+
+    # 上传构建产物（APK 文件）
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug   # 给 artifact 起个名字
+        path: app/build/outputs/apk/debug/*.apk   # 根据实际变体路径调整
